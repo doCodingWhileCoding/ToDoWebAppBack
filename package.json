@@ -7,5 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nadir Boughlala Ruiz",
-  "license": "ISC"
+  "license": "ISC",
+  "volta": {
+    "node": "18.18.0"
+  }
 }
