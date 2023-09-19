@@ -1,6 +1,7 @@
 {
   "name": "todowebapp_back",
   "version": "1.0.0",
+  "type": "module",
   "description": "the backend of ToDoWebApp",
   "main": "index.js",
   "scripts": {
