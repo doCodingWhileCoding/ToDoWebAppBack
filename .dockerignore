@@ -1,0 +1,8 @@
+*.env
+node_modules
+Dockerfile*
+docker-compose*
+.vscode
+.gitignore
+.eslintrc
+.prettierrc
