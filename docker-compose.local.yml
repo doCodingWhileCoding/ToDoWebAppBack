@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  node:
+    container_name: node
+    restart: always
+    build: .
+    ports:
+      - '${LOCAL_NODE_EXTERNAL_PORT}:${LOCAL_NODE_INTERNAL_PORT}'
+    networks:
+      - front_back
+      - back_db
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - NODE_ENV=local
+    command: npm run local
+    depends_on:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - mongodb_local_data:/data/db
+    ports:
+      - '27018:27017'
+    networks:
+      - back_db
+    command: mongod --quiet --logpath /dev/null
+
+networks:
+  front_back:
+  back_db:
+
+volumes:
+  mongodb_local_data:
