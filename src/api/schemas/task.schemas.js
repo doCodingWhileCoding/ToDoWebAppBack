@@ -17,6 +17,11 @@ const TaskRepetitionRateSchema = RepetitionDate || WeekRepetitionDateSchema || n
 const TaskFileUrlSchema = z.string().url() || null
 const TaskNoteSchema = z.string() || null
 
+//params
+const TaskParamsSchema = z.object({
+  id: ObjectIdSchema,
+})
+
 //data
 const TaskDBDataSchema = MongooseCommonSchema.extend({
   title: TaskTitleSchema,
@@ -108,12 +113,4 @@ const DeleteTaskSchema = z
 
 const DeleteTasksSchema = z.object({}).strict()
 
-export {
-  TaskDBDataSchema,
-  CreateTaskSchema,
-  GetTaskSchema,
-  GetTasksSchema,
-  UpdateTaskSchema,
-  DeleteTaskSchema,
-  DeleteTasksSchema,
-}
+export { CreateTaskSchema, GetTaskSchema, GetTasksSchema, UpdateTaskSchema, DeleteTaskSchema, DeleteTasksSchema }
