@@ -5,6 +5,7 @@ import { corsConfig } from './libs/index.js'
 import helmet from 'helmet'
 import { globalLimiter } from './libs/index.js'
 import morgan from 'morgan'
+import { ErrorHandler } from './middlewares/index.js'
 
 const app = express()
 
@@ -19,5 +20,7 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 app.use(express.json())
+
+app.use(ErrorHandler)
 
 export default app
