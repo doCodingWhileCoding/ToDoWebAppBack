@@ -36,6 +36,7 @@ const Task = new Schema(
       type: [String],
       ref: 'TaskStep',
       required: true,
+      default: [],
       validate: {
         validator: async function (steps) {
           for (const step of steps) {
@@ -51,19 +52,19 @@ const Task = new Schema(
     },
     dueDate: {
       type: Date,
-      required: true,
+      default: null,
     },
     repetitionRate: {
       type: Map,
-      required: true,
+      default: null,
     },
     fileUrl: {
       type: String,
-      required: true,
+      default: null,
     },
     note: {
       type: String,
-      required: true,
+      default: null,
     },
   },
   {
