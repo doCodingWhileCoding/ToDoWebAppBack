@@ -23,6 +23,15 @@ if (process.env.NODE_ENV !== 'test') {
 
 app.use(express.json())
 
+app.use('/', routes)
+app.use((req, res, next) => {
+  const err = {
+    statusCode: 404,
+    errMsg: errorMessages.NOT_FOUND,
+  }
+  next(err)
+})
+
 app.use(ErrorHandler)
 
 export default app
