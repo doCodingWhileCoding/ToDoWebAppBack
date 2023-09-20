@@ -21,6 +21,7 @@
     "express-rate-limit": "^7.0.1",
     "helmet": "^7.0.0",
     "mongoose": "^7.5.2",
+    "mongoose-paginate-v2": "^1.7.4",
     "morgan": "^1.10.0"
   }
 }

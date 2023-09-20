@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose'
 import { schemaValues } from '../constants/index.js'
 import TaskStep from './TaskStep.js'
+import mongoosePaginate from 'mongoose-paginate-v2'
 
 const Task = new Schema(
   {
@@ -75,5 +76,7 @@ const Task = new Schema(
     strict: 'throw',
   }
 )
+
+Task.plugin(mongoosePaginate)
 
 export default model('Task', Task)
