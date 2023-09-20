@@ -1,4 +1,4 @@
-import config from '../../config/index.js'
+import config from '../../config/dotenv.js'
 const corsConfig = {
   origin: config.FRONT_BASE_URL,
 }

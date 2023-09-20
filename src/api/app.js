@@ -1,11 +1,13 @@
 import express from 'express'
-import config from '../config/index.js'
+import config from '../config/dotenv.js'
 import cors from 'cors'
-import { corsConfig } from './libs/index.js'
+import corsConfig from './libs/cors.js'
 import helmet from 'helmet'
-import { globalLimiter } from './libs/index.js'
+import globalLimiter from './libs/globalLimiter.js'
 import morgan from 'morgan'
-import { ErrorHandler } from './middlewares/index.js'
+import ErrorHandler from './middlewares/ErrorHandler.js'
+import errorMessages from './constants/error_messages.js'
+import routes from './routes/index.js'
 
 const app = express()
 

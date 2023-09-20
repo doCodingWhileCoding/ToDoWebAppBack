@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import { schemaValues } from '../constants/index.js'
+import schemaValues from '../constants/schema_values.js'
 
 const TaskStep = new Schema(
   {
