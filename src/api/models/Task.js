@@ -52,7 +52,8 @@ const Task = new Schema(
     },
     dueDate: {
       type: Date,
-      default: null,
+      required: true,
+      default: new Date(),
     },
     repetitionRate: {
       type: Map,
