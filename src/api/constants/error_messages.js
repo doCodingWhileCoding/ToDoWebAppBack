@@ -1,0 +1,38 @@
+const errorMessages = {
+  NOT_FOUND: 'NOT_FOUND',
+  EMAIL_ERROR: 'EMAIL_ERROR',
+  UNKNOW_ERROR: 'UNKNOW_ERROR',
+  UTILS: {
+    NOTIFICATIONS: {
+      SEND_EMAIL: 'ERROR_SENDING_EMAIL',
+    },
+  },
+  MIDDLEWARES: {
+    AUTH: {
+      NO_TOKEN: 'NO_TOKEN_PROVIDED',
+      INVALID_TOKEN: 'INVALID_TOKEN',
+    },
+  },
+  SCHEMAS: {
+    ATLEASTONE: 'ATLEASTONE',
+    USER: {
+      PASSWORD: {
+        NO_LETTER: 'PASSWORD_NO_LETTER',
+        NO_NUMBER: 'PASSWORD_NO_NUMBER',
+        NO_SPECIALCHAR: 'PASSWORD_NO_SPECIALCHAR',
+        DONT_MATCH: 'PASSWORD_DONT_MATCH',
+      },
+    },
+  },
+  MODELS: {
+    TASK: {
+      DUPLICATED: 'DUPLICATED_TASK',
+    },
+    USER: {
+      EMAIL_EXISTS: 'EMAIL_EXISTS',
+      USERNAME_EXISTS: 'USERNAME_EXISTS',
+      PHONENUMBER_EXISTS: 'PHONENUMBER_EXISTS',
+    },
+  },
+}
+export default errorMessages
