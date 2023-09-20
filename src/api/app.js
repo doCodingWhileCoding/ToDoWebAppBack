@@ -18,4 +18,6 @@ if (process.env.NODE_ENV !== 'test') {
   app.use(morgan('dev')) //Returns information in console about petitions (GET,PUT,POST,DELETE)
 }
 
+app.use(express.json())
+
 export default app
