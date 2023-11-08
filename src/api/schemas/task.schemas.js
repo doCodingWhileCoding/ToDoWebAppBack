@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { MongooseCommonSchema, ObjectIdSchema } from './common/index.js'
+import { MongooseCommonSchema, ObjectIdSchema, BooleanParamSchema, NumberParamSchema } from './common/index.js'
 import errorMessages from '../constants/error_messages.js'
 import schemaValues from '../constants/schema_values.js'
 
@@ -20,6 +20,12 @@ const TaskNoteSchema = z.string() || null
 //params
 const TaskParamsSchema = z.object({
   id: ObjectIdSchema,
+})
+//
+const TaskQueriesSchema = z.object({
+  completed: BooleanParamSchema,
+  page: NumberParamSchema,
+  limit: NumberParamSchema,
 })
 
 //data
@@ -58,15 +64,53 @@ const GetTaskSchema = z
   })
   .strict()
 
-const GetTasksSchema = z.object({}).strict()
+const GetTasksSchema = z
+  .object({
+    query: z
+      .object({
+        completed: BooleanParamSchema,
+        page: NumberParamSchema.optional(),
+        limit: NumberParamSchema.optional(),
+      })
+      .strict(),
+  })
+  .strict()
+const UpdateTaskIsCompletedSchema = z
+  .object({
+    body: z
+      .object({
+        isCompleted: TaskIsComletedSchema,
+      })
+      .strict()
+      .required(),
+    params: TaskParamsSchema.pick({
+      id: true,
+    })
+      .strict()
+      .required(),
+  })
+  .strict()
+const UpdateTaskPositionSchema = z
+  .object({
+    body: z
+      .object({
+        position: TaskPositionSchema,
+      })
+      .strict()
+      .required(),
+    params: TaskParamsSchema.pick({
+      id: true,
+    })
+      .strict()
+      .required(),
+  })
+  .strict()
 
 const UpdateTaskSchema = z
   .object({
     body: z
       .object({
         title: TaskTitleSchema,
-        isCompleted: TaskIsComletedSchema,
-        position: TaskPositionSchema,
         isImportant: TaskIsImportantSchema,
         isMyDay: TaskIsMyDaySchema,
         steps: TaskStepsSchema,
@@ -79,16 +123,14 @@ const UpdateTaskSchema = z
       .strict()
       .refine(
         (obj) =>
-          obj.title ||
-          obj.isCompleted ||
-          obj.position ||
-          obj.isImportant ||
-          obj.isMyDay ||
-          obj.steps ||
-          obj.dueDate ||
-          obj.repetitionRate ||
-          obj.fileUrl ||
-          obj.note,
+          obj.title != undefined ||
+          obj.isImportant != undefined ||
+          obj.isMyDay != undefined ||
+          obj.steps != undefined ||
+          obj.dueDate != undefined ||
+          obj.repetitionRate != undefined ||
+          obj.fileUrl != undefined ||
+          obj.note != undefined,
         {
           message: errorMessages.SCHEMAS.ATLEASTONE,
         }
@@ -113,4 +155,13 @@ const DeleteTaskSchema = z
 
 const DeleteTasksSchema = z.object({}).strict()
 
-export { CreateTaskSchema, GetTaskSchema, GetTasksSchema, UpdateTaskSchema, DeleteTaskSchema, DeleteTasksSchema }
+export {
+  CreateTaskSchema,
+  GetTaskSchema,
+  GetTasksSchema,
+  UpdateTaskSchema,
+  UpdateTaskIsCompletedSchema,
+  UpdateTaskPositionSchema,
+  DeleteTaskSchema,
+  DeleteTasksSchema,
+}

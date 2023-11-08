@@ -25,5 +25,21 @@ const ColorRGBSchema = z.object({
   g: z.number().min(0).max(255),
   b: z.number().min(0).max(255),
 })
+const BooleanParamSchema = z.string().refine(
+  (value) => {
+    return value === 'true' || value === 'false'
+  },
+  {
+    message: "Value should be 'true' or 'false'.",
+  }
+)
+const NumberParamSchema = z.string().refine(
+  (value) => {
+    return !isNaN(Number(value))
+  },
+  {
+    message: 'Value should be a valid number in string format.',
+  }
+)
 
-export { ObjectIdSchema, MongooseCommonSchema, ColorRGBSchema }
+export { ObjectIdSchema, MongooseCommonSchema, ColorRGBSchema, BooleanParamSchema, NumberParamSchema }

@@ -5,7 +5,7 @@
   "description": "the backend of ToDoWebApp",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "nodemon src/index.js",
     "local": "NODE_ENV=local npm run start",
     "docker-local": "docker compose -f docker-compose.local.yml build && docker compose -f docker-compose.local.yml up"
   },
@@ -24,5 +24,8 @@
     "mongoose-paginate-v2": "^1.7.4",
     "morgan": "^1.10.0",
     "zod": "^3.22.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }
