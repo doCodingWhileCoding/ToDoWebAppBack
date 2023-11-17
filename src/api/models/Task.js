@@ -1,6 +1,5 @@
 import { Schema, model } from 'mongoose'
 import schemaValues from '../constants/schema_values.js'
-import TaskStep from './TaskStep.js'
 import mongoosePaginate from 'mongoose-paginate-v2'
 
 const Task = new Schema(
@@ -8,7 +7,6 @@ const Task = new Schema(
     title: {
       type: String,
       required: true,
-      trim: true,
       maxlength: schemaValues.TASK_TITLE_LENGTH,
     },
     isCompleted: {
@@ -22,45 +20,16 @@ const Task = new Schema(
       default: 0,
       min: 0,
     },
-    isImportant: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
-    isMyDay: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
-    steps: {
-      type: [String],
-      ref: 'TaskStep',
-      required: true,
-      default: [],
-      validate: {
-        validator: async function (steps) {
-          for (const step of steps) {
-            const stepExists = await TaskStep.exists({ _id: step })
-            if (!stepExists) {
-              return false
-            }
-          }
-          return true
-        },
-        message: 'El step no existe.',
-      },
+    date: {
+      type: Date,
+      default: null,
     },
     dueDate: {
       type: Date,
-      required: true,
-      default: new Date(),
+      default: null,
     },
     repetitionRate: {
       type: Map,
-      default: null,
-    },
-    fileUrl: {
-      type: String,
       default: null,
     },
     note: {

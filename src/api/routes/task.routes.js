@@ -24,13 +24,13 @@ import taskStepRouter from './taskStep.routes.js'
 const router = Router()
 
 router.post('/', validateSchema(CreateTaskSchema), createTask)
-router.get('/:id', validateSchema(GetTaskSchema), getTask)
+router.get('/:taskId', validateSchema(GetTaskSchema), getTask)
 router.get('/', validateSchema(GetTasksSchema), getTasks)
-router.delete('/:id', validateSchema(DeleteTaskSchema), deleteTask)
+router.delete('/:taskId', validateSchema(DeleteTaskSchema), deleteTask)
 router.delete('/', validateSchema(DeleteTasksSchema), deleteTasks)
-router.put('/:id/isCompleted', validateSchema(UpdateTaskIsCompletedSchema), updateTaskIsCompleted)
-router.put('/:id/position', validateSchema(UpdateTaskPositionSchema), updateTaskPosition)
-router.put('/:id', validateSchema(UpdateTaskSchema), updateTask)
+router.put('/:taskId/isCompleted', validateSchema(UpdateTaskIsCompletedSchema), updateTaskIsCompleted)
+router.put('/:taskId/position', validateSchema(UpdateTaskPositionSchema), updateTaskPosition)
+router.put('/:taskId', validateSchema(UpdateTaskSchema), updateTask)
 
 router.use('/:taskId/taskSteps', taskStepRouter)
 

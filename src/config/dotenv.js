@@ -8,6 +8,7 @@ const config = {
   MONGO_SERVICE_NAME: 'mongo',
   DB_NAME: 'mylocaldb',
   MONGO_SRV: '',
+  TZ: process.env.TZ || 'Europe/Madrid',
 }
 
 if (process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'test') {

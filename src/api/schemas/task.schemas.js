@@ -2,28 +2,33 @@ import { z } from 'zod'
 import { MongooseCommonSchema, ObjectIdSchema, BooleanParamSchema, NumberParamSchema } from './common/index.js'
 import errorMessages from '../constants/error_messages.js'
 import schemaValues from '../constants/schema_values.js'
+import { TasksQueryTypes } from '../constants/enums.js'
 
 const WeekRepetitionDateSchema = z.map(z.number().int().nonnegative(), z.string(), z.string())
 const RepetitionDate = z.map(z.number().int().nonnegative(), z.string())
 
 const TaskTitleSchema = z.string().max(schemaValues.TASK_TITLE_LENGTH)
 const TaskIsComletedSchema = z.boolean()
-const TaskPositionSchema = z.number().nonnegative()
-const TaskIsImportantSchema = z.boolean()
-const TaskIsMyDaySchema = z.boolean()
-const TaskStepsSchema = ObjectIdSchema.array() || []
-const TaskDueDateSchema = z.date()
+const TaskPositionSchema = z.number().int().nonnegative()
+const TaskDateSchema = z
+  .string()
+  .transform((str) => new Date(str))
+  .nullable()
+const TaskDueDateSchema = z
+  .string()
+  .transform((str) => new Date(str))
+  .nullable()
 const TaskRepetitionRateSchema = RepetitionDate || WeekRepetitionDateSchema || null
-const TaskFileUrlSchema = z.string().url() || null
-const TaskNoteSchema = z.string() || null
+const TaskNoteSchema = z.string().nullable()
+const TasksQueryTypesSchema = z.nativeEnum(TasksQueryTypes)
 
 //params
 const TaskParamsSchema = z.object({
-  id: ObjectIdSchema,
+  taskId: ObjectIdSchema,
 })
 //
 const TaskQueriesSchema = z.object({
-  completed: BooleanParamSchema,
+  type: TasksQueryTypesSchema,
   page: NumberParamSchema,
   limit: NumberParamSchema,
 })
@@ -33,12 +38,9 @@ const TaskDBDataSchema = MongooseCommonSchema.extend({
   title: TaskTitleSchema,
   isCompleted: TaskIsComletedSchema,
   position: TaskPositionSchema,
-  isImportant: TaskIsImportantSchema,
-  isMyDay: TaskIsMyDaySchema,
-  steps: TaskStepsSchema,
+  date: TaskDateSchema,
   dueDate: TaskDueDateSchema,
   repetitionRate: TaskRepetitionRateSchema,
-  fileUrl: TaskFileUrlSchema,
   note: TaskNoteSchema,
 })
 
@@ -57,7 +59,7 @@ const CreateTaskSchema = z
 const GetTaskSchema = z
   .object({
     params: TaskParamsSchema.pick({
-      id: true,
+      taskId: true,
     })
       .strict()
       .required(),
@@ -68,7 +70,7 @@ const GetTasksSchema = z
   .object({
     query: z
       .object({
-        completed: BooleanParamSchema,
+        type: TasksQueryTypesSchema,
         page: NumberParamSchema.optional(),
         limit: NumberParamSchema.optional(),
       })
@@ -84,7 +86,7 @@ const UpdateTaskIsCompletedSchema = z
       .strict()
       .required(),
     params: TaskParamsSchema.pick({
-      id: true,
+      taskId: true,
     })
       .strict()
       .required(),
@@ -99,7 +101,7 @@ const UpdateTaskPositionSchema = z
       .strict()
       .required(),
     params: TaskParamsSchema.pick({
-      id: true,
+      taskId: true,
     })
       .strict()
       .required(),
@@ -111,32 +113,26 @@ const UpdateTaskSchema = z
     body: z
       .object({
         title: TaskTitleSchema,
-        isImportant: TaskIsImportantSchema,
-        isMyDay: TaskIsMyDaySchema,
-        steps: TaskStepsSchema,
+        date: TaskDateSchema,
         dueDate: TaskDueDateSchema,
         repetitionRate: TaskRepetitionRateSchema,
-        fileUrl: TaskFileUrlSchema,
         note: TaskNoteSchema,
       })
       .partial()
       .strict()
       .refine(
         (obj) =>
-          obj.title != undefined ||
-          obj.isImportant != undefined ||
-          obj.isMyDay != undefined ||
-          obj.steps != undefined ||
-          obj.dueDate != undefined ||
-          obj.repetitionRate != undefined ||
-          obj.fileUrl != undefined ||
-          obj.note != undefined,
+          obj.title !== undefined ||
+          obj.date !== undefined ||
+          obj.dueDate !== undefined ||
+          obj.repetitionRate !== undefined ||
+          obj.note !== undefined,
         {
           message: errorMessages.SCHEMAS.ATLEASTONE,
         }
       ),
     params: TaskParamsSchema.pick({
-      id: true,
+      taskId: true,
     })
       .strict()
       .required(),
@@ -146,7 +142,7 @@ const UpdateTaskSchema = z
 const DeleteTaskSchema = z
   .object({
     params: TaskParamsSchema.pick({
-      id: true,
+      taskId: true,
     })
       .strict()
       .required(),
