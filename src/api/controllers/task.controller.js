@@ -13,7 +13,8 @@ import {
 import errorMessages from '../constants/error_messages.js'
 
 export const createTask = async (req, res, next) => {
-  if (await isDuplicatedTask(req.body.title, false)) {
+  const userId = req.userId
+  if (await isDuplicatedTask(userId, req.body.title, false)) {
     const err = {
       statusCode: 301,
       errMsg: errorMessages.MODELS.TASK.DUPLICATED,
@@ -21,7 +22,7 @@ export const createTask = async (req, res, next) => {
     return next(err)
   }
   try {
-    const savedTask = await saveTask(req.body)
+    const savedTask = await saveTask(userId, req.body)
     return res.status(200).json(savedTask)
   } catch (error) {
     return next(error)
@@ -29,8 +30,9 @@ export const createTask = async (req, res, next) => {
 }
 
 export const getTask = async (req, res, next) => {
+  const userId = req.userId
   const taskId = req.params.taskId
-  if (!(await isExistingTask(taskId))) {
+  if (!(await isExistingTask(userId, taskId))) {
     const err = {
       statusCode: 404,
       errMsg: errorMessages.NOT_FOUND,
@@ -38,7 +40,7 @@ export const getTask = async (req, res, next) => {
     return next(err)
   }
   try {
-    const task = await getTaskById(taskId)
+    const task = await getTaskById(userId, taskId)
     return res.status(200).json(task)
   } catch (error) {
     return next(error)
@@ -46,9 +48,10 @@ export const getTask = async (req, res, next) => {
 }
 
 export const getTasks = async (req, res, next) => {
+  const userId = req.userId
   const { type, page = 1, limit = 10 } = req.query
   try {
-    const tasks = await getPaginatedTasks(type, limit, page)
+    const tasks = await getPaginatedTasks(userId, type, limit, page)
     return res.status(200).json(tasks)
   } catch (error) {
     return next(error)
@@ -56,8 +59,9 @@ export const getTasks = async (req, res, next) => {
 }
 
 export const deleteTask = async (req, res, next) => {
+  const userId = req.userId
   const taskId = req.params.taskId
-  if (!(await isExistingTask(taskId))) {
+  if (!(await isExistingTask(userId, taskId))) {
     const err = {
       statusCode: 404,
       errMsg: errorMessages.NOT_FOUND,
@@ -65,7 +69,7 @@ export const deleteTask = async (req, res, next) => {
     return next(err)
   }
   try {
-    const deletedTask = await deleteTaskById(taskId)
+    const deletedTask = await deleteTaskById(userId, taskId)
     return res.status(200).json(deletedTask)
   } catch (error) {
     return next(error)
@@ -82,8 +86,9 @@ export const deleteTasks = async (req, res, next) => {
 }
 
 export const updateTask = async (req, res, next) => {
+  const userId = req.userId
   const taskId = req.params.taskId
-  if (!(await isExistingTask(taskId))) {
+  if (!(await isExistingTask(userId, taskId))) {
     const err = {
       statusCode: 404,
       errMsg: errorMessages.NOT_FOUND,
@@ -91,15 +96,16 @@ export const updateTask = async (req, res, next) => {
     return next(err)
   }
   try {
-    const updatedTask = await updateTaskById(taskId, req.body)
-    return res.status(200).json(`Updated: ${updatedTask}`)
+    const updatedTask = await updateTaskById(userId, taskId, req.body)
+    return res.status(200).json(updatedTask)
   } catch (error) {
     return next(error)
   }
 }
 export const updateTaskIsCompleted = async (req, res, next) => {
+  const userId = req.userId
   const taskId = req.params.taskId
-  if (!(await isExistingTask(taskId))) {
+  if (!(await isExistingTask(userId, taskId))) {
     const err = {
       statusCode: 404,
       errMsg: errorMessages.NOT_FOUND,
@@ -107,15 +113,16 @@ export const updateTaskIsCompleted = async (req, res, next) => {
     return next(err)
   }
   try {
-    const updatedTask = await updateTaskIsCompletedById(taskId, req.body.isCompleted)
-    return res.status(200).json(`Updated: ${updatedTask}`)
+    const updatedTask = await updateTaskIsCompletedById(userId, taskId, req.body.isCompleted)
+    return res.status(200).json(updatedTask)
   } catch (error) {
     return next(error)
   }
 }
 export const updateTaskPosition = async (req, res, next) => {
+  const userId = req.userId
   const taskId = req.params.taskId
-  if (!(await isExistingTask(taskId))) {
+  if (!(await isExistingTask(userId, taskId))) {
     const err = {
       statusCode: 404,
       errMsg: errorMessages.NOT_FOUND,
@@ -123,7 +130,7 @@ export const updateTaskPosition = async (req, res, next) => {
     return next(err)
   }
   try {
-    const updatedTask = await updateTaskPositionById(taskId, req.body.position)
+    const updatedTask = await updateTaskPositionById(userId, taskId, req.body.position)
     return res.status(200).json(`Updated: ${updatedTask}`)
   } catch (error) {
     return next(error)

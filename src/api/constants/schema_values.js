@@ -1,6 +1,9 @@
 const schemaValues = {
   TASK_TITLE_LENGTH: 100,
   TASKSTEP_TITLE_LENGTH: 30,
+  USER_EMAIL_LENGTH: 40,
+  USER_PASSWORD_MIN_LENGTH: 5,
+  USER_PASSWORD_MAX_LENGTH: 40,
 }
 
 export default schemaValues

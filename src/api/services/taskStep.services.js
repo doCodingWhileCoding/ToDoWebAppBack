@@ -39,7 +39,7 @@ export const saveTaskStep = async (taskId, prevPosition) => {
   const savedTaskStep = await taskStep.save()
   return savedTaskStep
 }
-export const getTaskStepsByTasId = async (taskId) => {
+export const getTaskStepsByTaskId = async (taskId) => {
   const query = { taskId: taskId }
   const taskSteps = await TaskStep.find(query).sort({ position: 1 })
   return taskSteps

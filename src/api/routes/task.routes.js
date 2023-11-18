@@ -9,7 +9,6 @@ import {
   updateTaskIsCompleted,
   updateTaskPosition,
 } from '../controllers/task.controller.js'
-import validateSchema from '../middlewares/SchemaValidator.js'
 import {
   CreateTaskSchema,
   GetTaskSchema,
@@ -20,7 +19,9 @@ import {
   DeleteTaskSchema,
   DeleteTasksSchema,
 } from '../schemas/task.schemas.js'
+import validateSchema from '../middlewares/SchemaValidator.js'
 import taskStepRouter from './taskStep.routes.js'
+
 const router = Router()
 
 router.post('/', validateSchema(CreateTaskSchema), createTask)

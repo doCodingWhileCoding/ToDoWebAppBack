@@ -1,13 +1,17 @@
 import { Schema, model } from 'mongoose'
-import schemaValues from '../constants/schema_values.js'
-import mongoosePaginate from 'mongoose-paginate-v2'
+import { TokenTypes } from '../constants/enums.js'
 import User from './User.js'
 import { Types } from 'mongoose'
 
 const { ObjectId } = Types
 
-const Task = new Schema(
+const Token = new Schema(
   {
+    type: {
+      type: String,
+      enum: Object.values(TokenTypes),
+      required: true,
+    },
     ownerId: {
       type: ObjectId,
       ref: 'User',
@@ -20,37 +24,14 @@ const Task = new Schema(
       },
       required: true,
     },
-    title: {
+    uuid: {
       type: String,
       required: true,
-      maxlength: schemaValues.TASK_TITLE_LENGTH,
     },
-    isCompleted: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
-    position: {
-      type: Number,
-      required: true,
-      default: 0,
-      min: 0,
-    },
-    date: {
+    expireAt: {
       type: Date,
-      default: null,
-    },
-    dueDate: {
-      type: Date,
-      default: null,
-    },
-    repetitionRate: {
-      type: Map,
-      default: null,
-    },
-    note: {
-      type: String,
-      default: null,
+      default: Date.now,
+      expires: '120m',
     },
   },
   {
@@ -64,6 +45,4 @@ const Task = new Schema(
   }
 )
 
-Task.plugin(mongoosePaginate)
-
-export default model('Task', Task)
+export default model('Token', Token)

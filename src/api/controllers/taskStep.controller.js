@@ -2,7 +2,7 @@ import errorMessages from '../constants/error_messages.js'
 import { isExistingTask } from '../services/task.services.js'
 import {
   saveTaskStep,
-  getTaskStepsByTasId,
+  getTaskStepsByTaskId,
   isExistingTaskStep,
   updateTaskStepByTaskId,
   updateTaskStepPositionById,
@@ -10,8 +10,9 @@ import {
 } from '../services/taskStep.services.js'
 
 export const createTaskStep = async (req, res, next) => {
+  const userId = req.userId
   const taskId = req.params.taskId
-  if (!(await isExistingTask(taskId))) {
+  if (!(await isExistingTask(userId, taskId))) {
     const err = {
       statusCode: 404,
       errMsg: errorMessages.NOT_FOUND,
@@ -27,17 +28,26 @@ export const createTaskStep = async (req, res, next) => {
   }
 }
 export const getTaskSteps = async (req, res, next) => {
+  const userId = req.userId
   const taskId = req.params.taskId
+  if (!(await isExistingTask(userId, taskId))) {
+    const err = {
+      statusCode: 404,
+      errMsg: errorMessages.NOT_FOUND,
+    }
+    return next(err)
+  }
   try {
-    const taskSteps = await getTaskStepsByTasId(taskId)
+    const taskSteps = await getTaskStepsByTaskId(taskId)
     return res.status(200).json(taskSteps)
   } catch (error) {
     return next(error)
   }
 }
 export const updateTaskStep = async (req, res, next) => {
+  const userId = req.userId
   const taskId = req.params.taskId
-  if (!(await isExistingTask(taskId))) {
+  if (!(await isExistingTask(userId, taskId))) {
     const err = {
       statusCode: 404,
       errMsg: errorMessages.NOT_FOUND,
@@ -60,8 +70,9 @@ export const updateTaskStep = async (req, res, next) => {
   }
 }
 export const updateTaskStepPosition = async (req, res, next) => {
+  const userId = req.userId
   const taskId = req.params.taskId
-  if (!(await isExistingTask(taskId))) {
+  if (!(await isExistingTask(userId, taskId))) {
     const err = {
       statusCode: 404,
       errMsg: errorMessages.NOT_FOUND,
@@ -85,8 +96,9 @@ export const updateTaskStepPosition = async (req, res, next) => {
   }
 }
 export const deleteTaskStep = async (req, res, next) => {
+  const userId = req.userId
   const taskId = req.params.taskId
-  if (!(await isExistingTask(taskId))) {
+  if (!(await isExistingTask(userId, taskId))) {
     const err = {
       statusCode: 404,
       errMsg: errorMessages.NOT_FOUND,

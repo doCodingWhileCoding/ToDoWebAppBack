@@ -1,0 +1,62 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+
+    <style>
+      body{
+        background-color: white;
+      }
+      h1 { 
+        width: fit-content;
+        color: #FFC900; 
+        margin: 20px auto;
+      }
+      p { 
+        width: fit-content;
+        margin: 20px auto;
+        color: #23A094; 
+        font-size: 15px;
+      }
+      a {
+        height: fit-content;
+        background-color: #FFC900;
+        color: white;
+        text-decoration: none;
+        border: none;
+        border-radius: 20px;
+        padding: 5px 20px;
+      }
+      a:hover{
+        color: white;
+        transform: scale(1.1);
+      }
+      .confirmActionBox{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+      img{
+        margin: 20px auto;
+        width: 80%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
+
+  </head>
+  <body>
+      <h1>{{title}}</h1>
+      <p>{{text}}</p>
+      <div class="confirmActionBox">
+        <a href="{{url}}">CONFIRM EMAIL</a>
+      </div>
+      <img src="https://images.unsplash.com/photo-1644329843491-99edfc83de04?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80">
+      
+  </body>
+</html>
