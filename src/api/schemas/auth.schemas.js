@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { UserEmailSchema, UserPasswordSchema } from './user.schemas'
+import { UserEmailSchema, UserPasswordSchema } from './user.schemas.js'
 import { ObjectIdSchema } from './common/index.js'
 //params
 const AuthParamsSchema = z.object({
