@@ -47,8 +47,8 @@ export const sendEmailVerificationEmail = async (ownerId, ownerEmail) => {
   const subject = 'Por favor verifique su correo'
   const template = 'verifyEmail'
   const context = {
-    title: 'Gracias por registrarse, está a sçolo un paso de poder usar la aplicación',
-    text: "clique sobre el botón 'Confirmar Email' se completará su registro",
+    title: 'Gracias por registrarse, está a sólo un paso de poder usar la aplicación',
+    text: "clique sobre el botón 'Confirmar Email' y se completará su registro",
     url: `${config.FRONT_BASE_URL}/auth/emailVerification/${ownerId}/${token.uuid}`,
   }
   await sendEmail(recipient, subject, template, context)
