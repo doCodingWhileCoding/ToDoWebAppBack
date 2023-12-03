@@ -30,15 +30,7 @@ const CreateUserSchema = z
   })
   .strict()
 
-const GetUserSchema = z
-  .object({
-    params: UserParamSchema.pick({
-      userId: true,
-    })
-      .strict()
-      .required(),
-  })
-  .strict()
+const GetUserSchema = z.object({}).strict()
 
 const UpdateUserEmail = z
   .object({
@@ -48,22 +40,9 @@ const UpdateUserEmail = z
       })
       .strict()
       .required(),
-    params: UserParamSchema.pick({
-      userId: true,
-    })
-      .strict()
-      .required(),
   })
   .strict()
 
-const DeleteUserSchema = z
-  .object({
-    params: UserParamSchema.pick({
-      userId: true,
-    })
-      .strict()
-      .required(),
-  })
-  .strict()
+const DeleteUserSchema = z.object({}).strict()
 
 export { CreateUserSchema, GetUserSchema, UpdateUserEmail, DeleteUserSchema, UserEmailSchema, UserPasswordSchema }
