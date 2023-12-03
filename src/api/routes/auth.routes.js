@@ -8,10 +8,14 @@ import {
   ResendEmailVerificationEmailSchema,
 } from '../schemas/auth.schemas.js'
 import validateSchema from '../middlewares/SchemaValidator.js'
+import errorMessages from '../constants/error_messages.js'
 
 const limiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutos
   max: 1, //limit ech IP to 5 request
+  handler: (req, res) => {
+    res.status(429).json(errorMessages.TOO_MANY_REQUESTS)
+  },
 })
 const router = Router()
 
