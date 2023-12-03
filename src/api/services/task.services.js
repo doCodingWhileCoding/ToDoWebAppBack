@@ -149,7 +149,7 @@ const updateTasksPositionAfterDelete = async (ownerId, isCompleted, oldPosition)
   )
 }
 export const saveTask = async (ownerId, body) => {
-  const lastPosition = await getLastPosition(false)
+  const lastPosition = await getLastPosition(ownerId, false)
   const taskData = {
     ...body,
     ownerId: ownerId,
