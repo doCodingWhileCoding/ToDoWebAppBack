@@ -15,7 +15,7 @@ import { TokenTypes } from '../constants/enums.js'
 export const signUpUser = async (req, res, next) => {
   if (await isExistingUserEmail(req.body.email)) {
     const err = {
-      statusCode: 301,
+      statusCode: 409,
       errMsg: errorMessages.MODELS.USER.EMAIL_EXISTS,
     }
     return next(err)
@@ -31,7 +31,7 @@ export const signUpUser = async (req, res, next) => {
 export const loginUser = async (req, res, next) => {
   if (!(await isExistingUserEmail(req.body.email))) {
     const err = {
-      statusCode: 301,
+      statusCode: 404,
       errMsg: errorMessages.MODELS.USER.INVALID_LOGIN,
     }
     return next(err)
@@ -44,13 +44,17 @@ export const loginUser = async (req, res, next) => {
   }
   if (!(await isValidPassword(req.body.password, user.password))) {
     const err = {
-      statusCode: 301,
+      statusCode: 401,
       errMsg: errorMessages.MODELS.USER.INVALID_LOGIN,
     }
     return next(err)
   }
   if (!user.emailVerified) {
-    return res.status(200).json({ status: errorMessages.MODELS.USER.EMAIL_NOT_VERIFIED, userId: user._id })
+    const err = {
+      errMsg: errorMessages.MODELS.USER.EMAIL_NOT_VERIFIED,
+      userId: user._id,
+    }
+    return res.status(403).json(err)
   }
   const access_token = getAccessToken(user._id)
   return res.status(200).json(access_token)
@@ -65,8 +69,10 @@ export const verifyEmail = async (req, res, next) => {
     }
     return next(err)
   }
+  const user = await getUserById(userId)
+  if (user.emailVerified) return res.status(200).json('email already verified')
   const uuid = req.params.uuid
-  const token = await findToken(TokenTypes.EMAIL_VERIFICATION, userId, uuid)
+  const token = await findToken(userId, TokenTypes.EMAIL_VERIFICATION, uuid)
   if (!token) {
     const err = {
       statusCode: 404,
@@ -103,7 +109,7 @@ export const resendEmailVerificationEmail = async (req, res, next) => {
       await deleteTokenByOwnerId(userId, TokenTypes.EMAIL_VERIFICATION)
     }
     try {
-      await sendEmailVerificationEmail(user._id, user._id)
+      await sendEmailVerificationEmail(user._id, user.email)
       res.status(200).json('email sended')
     } catch (error) {
       return next(error)
@@ -114,26 +120,18 @@ export const resendEmailVerificationEmail = async (req, res, next) => {
 }
 
 export const verifyToken = async (req, res, next) => {
-  let access_token
-  try {
-    access_token = req.headers['access_token']
-  } catch (error) {
-    return next(error)
-  }
-  if (!access_token) {
-    const err = {
-      statusCode: 401,
-      errMsg: errorMessages.MIDDLEWARES.AUTH.NO_TOKEN,
-    }
-    return next(err)
-  }
+  const authHeader = req.headers.authorization
+  if (!authHeader) return res.status(401).json({ errMsg: errorMessages.MIDDLEWARES.AUTH.UNAUTHORIZED })
+  const token = authHeader.split(' ')[1]
+  if (!token) return res.status(401).json({ errMsg: errorMessages.MIDDLEWARES.AUTH.UNAUTHORIZED })
+
   let decodedJWT
   try {
-    decodedJWT = getDecodedAccessToken(access_token)
+    decodedJWT = getDecodedAccessToken(token)
   } catch (error) {
     const err = {
       statusCode: 401,
-      errMsg: errorMessages.MIDDLEWARES.AUTH.INVALID_TOKEN,
+      errMsg: errorMessages.MIDDLEWARES.AUTH.TOKEN_EXPIRED,
     }
     return next(err)
   }
