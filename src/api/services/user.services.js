@@ -1,13 +1,7 @@
 import User from '../models/User.js'
-import config from '../../config/dotenv.js'
-import bcrypt from 'bcrypt'
 import { sendEmailVerificationEmail } from './email.services.js'
+import { getEncryptedPassword } from './auth.services.js'
 
-const getEncryptedPassword = async (password) => {
-  const salt = await bcrypt.genSalt(Number(config.BCRYPT_SALTROUNDS))
-  const encryptedPassword = await bcrypt.hash(password, salt)
-  return encryptedPassword
-}
 export const isExistingUserEmail = async (email) => {
   return await User.exists({ email: email })
 }
@@ -15,7 +9,7 @@ export const isExistingUser = async (userId) => {
   return await User.exists({ _id: userId })
 }
 export const saveUser = async (body) => {
-  const encryptedPassword = getEncryptedPassword(body.req.password)
+  const encryptedPassword = await getEncryptedPassword(body.password)
   const userData = {
     ...body,
     password: encryptedPassword,
@@ -27,6 +21,10 @@ export const saveUser = async (body) => {
 }
 export const getUserById = async (userId) => {
   const user = await User.findById(userId)
+  return user
+}
+export const getUserDataById = async (userId) => {
+  const user = await User.findById(userId).select({ _id: 1, email: 1 })
   return user
 }
 export const getUserByEmail = async (email) => {
