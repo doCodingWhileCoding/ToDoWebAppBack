@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const config = {
-  NODE_INTERNAL_PORT: 3000,
+  NODE_INTERNAL_PORT: 9000,
   FRONT_BASE_URL: 'http://localhost:3000',
   MONGO_SERVICE_NAME: 'mongo',
   DB_NAME: 'mylocaldb',
