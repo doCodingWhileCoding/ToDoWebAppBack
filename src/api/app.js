@@ -23,6 +23,9 @@ if (process.env.NODE_ENV !== 'test') {
 
 app.use(express.json())
 
+app.get('/', (req, res) => {
+  res.status(200).json('OK')
+})
 app.use('/', routes)
 app.use((req, res, next) => {
   const err = {
