@@ -4,7 +4,7 @@ import { ObjectIdSchema } from './common/index.js'
 //params
 const AuthParamsSchema = z.object({
   userId: ObjectIdSchema,
-  uuid: z.string(),
+  uuid: z.string().uuid(),
 })
 
 //request
@@ -25,7 +25,7 @@ const LoginUserSchema = z
     body: z
       .object({
         email: UserEmailSchema,
-        password: UserPasswordSchema,
+        password: z.string(),
       })
       .strict()
       .required(),
