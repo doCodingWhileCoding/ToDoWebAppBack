@@ -16,7 +16,7 @@ export const createTask = async (req, res, next) => {
   const userId = req.userId
   if (await isDuplicatedTask(userId, req.body.title, false)) {
     const err = {
-      statusCode: 301,
+      statusCode: 409,
       errMsg: errorMessages.MODELS.TASK.DUPLICATED,
     }
     return next(err)
