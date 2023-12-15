@@ -105,7 +105,7 @@ export const resendEmailVerificationEmail = async (req, res, next) => {
   try {
     const user = await getUserById(userId)
     if (user.emailVerified) return res.status(200).json('email already verified')
-    if (!(await isExistingToken(userId, TokenTypes.EMAIL_VERIFICATION))) {
+    if (await isExistingToken(userId, TokenTypes.EMAIL_VERIFICATION)) {
       await deleteTokenByOwnerId(userId, TokenTypes.EMAIL_VERIFICATION)
     }
     try {
