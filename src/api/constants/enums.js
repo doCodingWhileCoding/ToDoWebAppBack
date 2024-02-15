@@ -6,4 +6,5 @@ export const TasksQueryTypes = Object.freeze({
 })
 export const TokenTypes = Object.freeze({
   EMAIL_VERIFICATION: 'email_verification',
+  RESET_PASSWORD: 'reset_password',
 })

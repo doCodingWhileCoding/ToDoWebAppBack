@@ -53,3 +53,16 @@ export const sendEmailVerificationEmail = async (ownerId, ownerEmail) => {
   }
   await sendEmail(recipient, subject, template, context)
 }
+export const sendForgotPasswordEmail = async (ownerId, ownerEmail) => {
+  const resetPasswordUuid = uuidv4()
+  const token = await saveToken(ownerId, TokenTypes.RESET_PASSWORD, resetPasswordUuid)
+  const recipient = ownerEmail
+  const subject = 'Olvidaste tu contraseña, no te preocupes ;)'
+  const template = 'forgotPassword'
+  const context = {
+    title: 'Olvidaste tu contraseña, pero tranquilo tenemos una solución',
+    text: "clique sobre el botón 'Cambiar contraseña' y ahí podrás añadir una nueva contraseña",
+    url: `${config.FRONT_BASE_URL}/auth/resetPassword/${ownerId}/${token.uuid}`,
+  }
+  await sendEmail(recipient, subject, template, context)
+}

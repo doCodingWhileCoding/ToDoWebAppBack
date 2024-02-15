@@ -34,3 +34,7 @@ export const getUserByEmail = async (email) => {
 export const updateUserEmailVerified = async (userId) => {
   await User.findByIdAndUpdate(userId, { emailVerified: true })
 }
+export const updateUserPassword = async (userId, newPassword) => {
+  const encryptedPassword = await getEncryptedPassword(newPassword)
+  await User.findByIdAndUpdate(userId, { password: encryptedPassword })
+}

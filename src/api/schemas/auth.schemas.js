@@ -53,4 +53,50 @@ const ResendEmailVerificationEmailSchema = z
   })
   .strict()
 
-export { SignUpUserSchema, LoginUserSchema, VerifyEmailSchema, ResendEmailVerificationEmailSchema }
+const ForgotPasswordByUserIdSchema = z
+  .object({
+    params: AuthParamsSchema.pick({
+      userId: true,
+    })
+      .strict()
+      .required(),
+  })
+  .strict()
+
+const ForgotPasswordByEmailSchema = z
+  .object({
+    body: z
+      .object({
+        email: UserEmailSchema,
+      })
+      .strict()
+      .required(),
+  })
+  .strict()
+
+const ResetPasswordSchema = z
+  .object({
+    body: z
+      .object({
+        newPassword: UserPasswordSchema,
+      })
+      .strict()
+      .required(),
+    params: AuthParamsSchema.pick({
+      userId: true,
+      uuid: true,
+    })
+      .strict()
+      .required(),
+  })
+  .strict()
+
+export {
+  SignUpUserSchema,
+  LoginUserSchema,
+  VerifyEmailSchema,
+  ResendEmailVerificationEmailSchema,
+  ForgotPasswordByUserIdSchema,
+  ForgotPasswordByEmailSchema,
+  ResetPasswordSchema,
+}

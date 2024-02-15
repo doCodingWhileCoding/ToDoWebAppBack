@@ -6,10 +6,11 @@ import {
   isExistingUser,
   updateUserEmailVerified,
   getUserById,
+  updateUserPassword,
 } from '../services/user.services.js'
 import { isValidPassword, getAccessToken, getDecodedAccessToken } from '../services/auth.services.js'
 import { findToken, deleteTokenById, isExistingToken, deleteTokenByOwnerId } from '../services/token.services.js'
-import { sendEmailVerificationEmail } from '../services/email.services.js'
+import { sendEmailVerificationEmail, sendForgotPasswordEmail } from '../services/email.services.js'
 import { TokenTypes } from '../constants/enums.js'
 
 export const signUpUser = async (req, res, next) => {
@@ -117,6 +118,87 @@ export const resendEmailVerificationEmail = async (req, res, next) => {
   } catch (error) {
     return next(error)
   }
+}
+
+export const forgotPasswordByEmail = async (req, res, next) => {
+  const email = req.body.email
+  if (!(await isExistingUserEmail(email))) {
+    const err = {
+      statusCode: 404,
+      errMsg: errorMessages.NOT_FOUND,
+    }
+    return next(err)
+  }
+  try {
+    const user = await getUserByEmail(email)
+    if (await isExistingToken(user._id, TokenTypes.RESET_PASSWORD)) {
+      await deleteTokenByOwnerId(user._id, TokenTypes.RESET_PASSWORD)
+    }
+    try {
+      await sendForgotPasswordEmail(user._id, user.email)
+      res.status(200).json('email sended')
+    } catch (error) {
+      return next(error)
+    }
+  } catch (error) {
+    return next(error)
+  }
+}
+
+export const forgotPasswordByUserId = async (req, res, next) => {
+  const userId = req.params.userId
+  if (!(await isExistingUser(userId))) {
+    const err = {
+      statusCode: 404,
+      errMsg: errorMessages.NOT_FOUND,
+    }
+    return next(err)
+  }
+  try {
+    const user = await getUserById(userId)
+    if (await isExistingToken(userId, TokenTypes.RESET_PASSWORD)) {
+      await deleteTokenByOwnerId(userId, TokenTypes.RESET_PASSWORD)
+    }
+    try {
+      await sendForgotPasswordEmail(user._id, user.email)
+      res.status(200).json('email sended')
+    } catch (error) {
+      return next(error)
+    }
+  } catch (error) {
+    return next(error)
+  }
+}
+
+export const resetPassword = async (req, res, next) => {
+  const userId = req.params.userId
+  if (!(await isExistingUser(userId))) {
+    const err = {
+      statusCode: 404,
+      errMsg: errorMessages.NOT_FOUND,
+    }
+    return next(err)
+  }
+  const uuid = req.params.uuid
+  const token = await findToken(userId, TokenTypes.RESET_PASSWORD, uuid)
+  if (!token) {
+    const err = {
+      statusCode: 404,
+      errMsg: errorMessages.MODELS.TOKEN.TOKEN_EXPIRED,
+    }
+    return next(err)
+  }
+  try {
+    await updateUserPassword(userId, req.body.newPassword)
+  } catch (error) {
+    return next(error)
+  }
+  try {
+    await deleteTokenById(token._id)
+  } catch (error) {
+    return next(error)
+  }
+  return res.status(200).json({})
 }
 
 export const verifyToken = async (req, res, next) => {
